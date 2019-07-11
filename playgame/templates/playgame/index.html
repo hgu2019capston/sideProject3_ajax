@@ -1,0 +1,91 @@
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'playgame/style.css' %}">
+
+<input type="button" class="getdata" name="getdata" value="getdata">
+
+<body>
+    <div class = "board"></div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+    
+(function poll() {
+    setTimeout(function() {
+        $.ajax({
+            type: "get",
+            url: '/ajax/getStones',
+            dataType: 'json',
+            success: function(data) {
+
+                $.each(data, function(index, element) {
+                    if(index % 2 == 0)
+                        var color = "black" ;
+                    else
+                        var color = "white" ;
+                    marginLeft1 = convX(element.x1) ;
+                    marginTop1 = convY(element.y1) ;
+                    marginLeft2 = convX(element.x2) ;
+                    marginTop2 = convY(element.y2) ;
+                    turn = index + 1 ;
+                    stone1 = '<div class="' + 
+                             color + 'Stone"' +
+                             'style="left: ' + marginLeft1 + ';' +
+                             'top: ' + marginTop1 + ';' +
+                             '">' + turn + '</div>' ;
+                    stone2 = '<div class="' +
+                             color + 'Stone"' +
+                             'style="left: ' + marginLeft2 + ';' +
+                             'top: ' + marginTop2 + ';' +
+                             '">' + turn + '</div>' ;
+                    $('.board').append(stone1 + stone2);
+                });
+
+            }, 
+            error: function(xhr, option, error){
+		alert(xhr.status); //error code
+            },
+            complete: poll,
+            timeout: 2000
+            })
+        }, 3000);
+})();
+
+    function convX(x)
+    {# conver X to margin left value #}
+    {
+        var mLeft;
+        switch(x)
+        {
+            case 'A': mLeft = 4+ 0*40 ; break ;
+            case 'B': mLeft = 4+ 1*40 ; break ;
+            case 'C': mLeft = 4+ 2*40 ; break ;
+            case 'D': mLeft = 4+ 3*40 ; break ;
+            case 'E': mLeft = 4+ 4*40 ; break ;
+            case 'F': mLeft = 4+ 5*40 ; break ;
+            case 'G': mLeft = 4+ 6*40 ; break ;
+            case 'H': mLeft = 4+ 7*40 ; break ;
+            case 'I': mLeft = 4+ 8*40 ; break ;
+            case 'J': mLeft = 4+ 9*40 ; break ;
+            case 'K': mLeft = 4+ 10*40 ; break ;
+            case 'L': mLeft = 4+ 11*40 ; break ;
+            case 'M': mLeft = 4+ 12*40 ; break ;
+            case 'N': mLeft = 4+ 13*40 ; break ;
+            case 'O': mLeft = 4+ 14*40 ; break ;
+            case 'P': mLeft = 4+ 15*40 ; break ;
+            case 'Q': mLeft = 4+ 16*40 ; break ;
+            case 'R': mLeft = 4+ 17*40 ; break ;
+            case 'S': mLeft = 4+ 18*40 ; break ;
+        }
+        var result = mLeft.toString() + "px" ;
+        return result;
+    }
+    function convY(y)
+    {# conver y to margin top vlaue #}
+    {
+        var mTop = 4 + (19 - y)*40;
+        var result = mTop.toString() + "px" ;
+        return result;
+    }
+</script>
